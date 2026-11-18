@@ -46,6 +46,5 @@ Tasks are saved in a file called `tasks.json`, which the program creates automat
 I used an AI assistant to help with explanations, code suggestions, and debugging, as allowed by the course. I tested the program myself and made sure I understand the code.
 
 ## Author
-[Your name]
-[Course name and date]# To-Do
-Project of Jasmeen 
+Jasmeen Kaur
+Applied Programming Project of Jasmeen 
