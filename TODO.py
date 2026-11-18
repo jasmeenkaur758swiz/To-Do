@@ -8,7 +8,7 @@ def load_tasks():
     try:
         with open(FILENAME, "r") as file:
             return json.load(file)
-    except FileNotFoundError:
+    except (FileNotFoundError, json.JSONDecodeError):
         return []
 
 
@@ -22,6 +22,14 @@ def show_tasks(tasks):
         deadline = task.get("deadline", "no deadline")
         priority = task.get("priority", "medium")
         print(number, task["title"], "| due:", deadline, "| priority:", priority, "|", task["status"])
+
+
+def ask_title(prompt):
+    while True:
+        text = input(prompt).strip()
+        if text:
+            return text
+        print("The title cannot be empty.")
 
 
 def ask_deadline():
@@ -40,6 +48,18 @@ def ask_priority():
         if text in ["low", "medium", "high"]:
             return text
         print("Please type low, medium, or high.")
+
+
+def ask_task_number(tasks, action):
+    try:
+        number = int(input("Which task number to " + action + "? "))
+    except ValueError:
+        print("Please type a number.")
+        return None
+    if number < 1 or number > len(tasks):
+        print("That task number does not exist.")
+        return None
+    return number - 1
 
 
 def filter_tasks(tasks):
@@ -84,7 +104,7 @@ while True:
     choice = input("Choose an option: ")
 
     if choice == "1":
-        title = input("Task: ")
+        title = ask_title("Task: ")
         deadline = ask_deadline()
         priority = ask_priority()
         task = {"title": title, "deadline": deadline, "priority": priority, "status": "pending"}
@@ -103,31 +123,33 @@ while True:
             print("No tasks yet.")
         else:
             show_tasks(tasks)
-            number = int(input("Which task number is done? "))
-            tasks[number - 1]["status"] = "done"
-            save_tasks(tasks)
-            print("Task marked as done!")
+            index = ask_task_number(tasks, "mark as done")
+            if index is not None:
+                tasks[index]["status"] = "done"
+                save_tasks(tasks)
+                print("Task marked as done!")
 
     elif choice == "4":
         if not tasks:
             print("No tasks yet.")
         else:
             show_tasks(tasks)
-            number = int(input("Which task number to delete? "))
-            removed = tasks.pop(number - 1)
-            save_tasks(tasks)
-            print("Deleted:", removed["title"])
+            index = ask_task_number(tasks, "delete")
+            if index is not None:
+                removed = tasks.pop(index)
+                save_tasks(tasks)
+                print("Deleted:", removed["title"])
 
     elif choice == "5":
         if not tasks:
             print("No tasks yet.")
         else:
             show_tasks(tasks)
-            number = int(input("Which task number to edit? "))
-            new_title = input("New title: ")
-            tasks[number - 1]["title"] = new_title
-            save_tasks(tasks)
-            print("Task updated!")
+            index = ask_task_number(tasks, "edit")
+            if index is not None:
+                tasks[index]["title"] = ask_title("New title: ")
+                save_tasks(tasks)
+                print("Task updated!")
 
     elif choice == "6":
         if not tasks:
