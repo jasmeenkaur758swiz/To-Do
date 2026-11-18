@@ -1,0 +1,18 @@
+[
+    {
+        "title": "currently at the lecture",
+        "status": "done"
+    },
+    {
+        "title": "library session",
+        "deadline": "2026-11-18",
+        "priority": "high",
+        "status": "pending"
+    },
+    {
+        "title": "app creation",
+        "deadline": "2026-12-20",
+        "priority": "medium",
+        "status": "pending"
+    }
+]
